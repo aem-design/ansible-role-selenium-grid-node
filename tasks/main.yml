@@ -14,7 +14,7 @@
     docker_image: "{{ docker_image }}"
     docker_image_tag: "{{ docker_image_tag }}"
     env:
-      TZ: "{{ docker.timezone }}"
+      TZ: "{{ docker_timezone }}"
   tags:
     - docker-container
 
