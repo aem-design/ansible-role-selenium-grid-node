@@ -33,10 +33,6 @@ Available variables are listed below, along with default values (see `defaults/m
 | docker_links                    	|          	|                                                                                       	|                                  	|
 |                                 	|          	| - "{{ service_selenium_grid_name | default('selenium-grid') }}:hub"                   	|                                  	|
 |                                 	|          	|                                                                                       	|                                  	|
-| iptable_rules                   	|          	|                                                                                       	|                                  	|
-|                                 	|          	| - port: "{{ service_selenium_grid_http_port | default('4444') }}"                     	|                                  	|
-|                                 	|          	| comment: "{{ docker_container_name }}"                                                	|                                  	|
-|                                 	|          	|                                                                                       	|                                  	|
 | wait_delay                      	|          	| 1                                                                                     	| how long to wait between retries 	|
 
 ## Dependencies
