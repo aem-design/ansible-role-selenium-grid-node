@@ -25,5 +25,6 @@
     - {
       role: "{{ role_name }}",
       service_selenium_grid_host: "{{ dockerhost_ip.stdout }}",
+      service_selenium_grid_name: "seleniumhubtest",
       debug_hide: false
     }
