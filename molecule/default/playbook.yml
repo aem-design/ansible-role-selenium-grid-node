@@ -3,7 +3,7 @@
   hosts: all
   become: true
   vars:
-    local_role_name: "ansible-role-selenium-grid-nide"
+    local_role_name: "ansible-role-selenium-grid-node"
     role_name: "{% if lookup('env','ROLE_NAME_FULL') %}{{ lookup('env','ROLE_NAME_FULL') }}{% else %}{{ local_role_name }}{% endif %}"
 
   pre_tasks:
