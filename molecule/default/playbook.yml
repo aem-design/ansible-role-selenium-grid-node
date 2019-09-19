@@ -23,8 +23,17 @@
 
   roles:
     - {
+      role: "aem_design.selenium_grid",
+      service_selenium_grid_host: "{{ dockerhost_ip.stdout }}",
+      service_selenium_grid_name: "seleniumhubtest",
+      docker_published_ports:
+        - 9444:4444
+      debug_hide: false
+    }
+    - {
       role: "{{ role_name }}",
       service_selenium_grid_host: "{{ dockerhost_ip.stdout }}",
       service_selenium_grid_name: "seleniumhubtest",
+      service_selenium_grid_http_port: "9444"
       debug_hide: false
     }

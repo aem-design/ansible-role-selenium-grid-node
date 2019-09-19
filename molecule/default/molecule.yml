@@ -27,14 +27,6 @@ platforms:
       - /var/run/docker.sock:/tmp/docker.sock
     privileged: true
     pre_build_image: true
-  - name: seleniumhubtest
-    image: "selenium/hub:latest"
-    published_ports:
-      - 9444:4444
-    env:
-      TZ: "Australia/Sydney"
-    pre_build_image: true
-    privileged: true
 scenario:
   name: default
 verifier:
