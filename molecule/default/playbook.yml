@@ -1,18 +1,18 @@
 ---
 - name: Converge
-  hosts: all
+  hosts: instance
   become: true
   vars:
     local_role_name: "ansible-role-selenium-grid-node"
     role_name: "{% if lookup('env','ROLE_NAME_FULL') %}{{ lookup('env','ROLE_NAME_FULL') }}{% else %}{{ local_role_name }}{% endif %}"
+    test_node_name_firefox: "node-firefox-test-{{ ansible_date_time.iso8601_micro | to_uuid }}"
+    test_node_name_chrome: "node-chrome-test-{{ ansible_date_time.iso8601_micro | to_uuid }}"
+    test_docker_host: "unix://tmp/docker.sock"
+    test_grid_port: "9994"
 
   pre_tasks:
-    - name: update apt cache.
-      apt: update_cache=yes cache_valid_time=600
-      when: ansible_os_family == 'Debian'
-
     - name: get docker host ip
-      become: yes
+      become: true
       shell: |
         set -o pipefail
         /sbin/ip route | awk '/default/ { print $3 }'
@@ -23,17 +23,31 @@
 
   roles:
     - {
-      role: "aem_design.selenium_grid",
+      role: "{{ role_name }}",
       service_selenium_grid_host: "{{ dockerhost_ip.stdout }}",
-      service_selenium_grid_name: "seleniumhubtest",
-      docker_published_ports:
-        - 9444:4444
+      service_selenium_grid_port: "{{ test_grid_port }}",
+      service_selenium_grid_debug_vncport: "9901",
+      docker_container_name: "{{ test_node_name_firefox }}",
+      docker_host: "{{ test_docker_host }}",
       debug_hide: false
     }
     - {
       role: "{{ role_name }}",
       service_selenium_grid_host: "{{ dockerhost_ip.stdout }}",
-      service_selenium_grid_name: "seleniumhubtest",
-      service_selenium_grid_http_port: "9444"
+      service_selenium_grid_port: "{{ test_grid_port }}",
+      service_selenium_grid_debug_vncport: "9902",
+      docker_container_name: "{{ test_node_name_chrome }}",
+      docker_host: "{{ test_docker_host }}",
       debug_hide: false
     }
+
+  post_tasks:
+    - name: "remove test containers"
+      docker_container:
+        docker_host: "{{ test_docker_host }}"
+        name: "{{ item }}"
+        force_kill: "true"
+        state: "absent"
+      loop:
+        - "{{ test_node_name_firefox }}"
+        - "{{ test_node_name_chrome }}"
