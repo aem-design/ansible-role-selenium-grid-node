@@ -15,16 +15,19 @@
     volumes: "{{ docker_volumes }}"
     shm_size: "{{ docker_shm_size }}"
     env: "{{ docker_env }}"
+  register: node_container
   tags:
     - docker-container
 
 - name: wait until service is ready {{ role_comment }}
   uri:
-    url: "{{ service_selenium_grid_status_url }}"
+    url: "{{ service_selenium_grid_status_url }}\
+      http://{{ node_container.ansible_facts.docker_container.NetworkSettings.IPAddress }}\
+      :{{ (node_container.ansible_facts.docker_container.Config.Env | select('match', 'NODE_PORT=.+') | list | first).split('=')[1] }}"
     return_content: true
     timeout: 300
   register: service_console
-  until: service_selenium_grid_status_test in service_console.content
+  until: docker_container_name in service_console.content
   delay: "{{ wait_delay | default(5) }}"
   retries: 360
   tags:
