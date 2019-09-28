@@ -10,18 +10,21 @@
   docker_container:
     name: "{{ docker_container_name }}"
     image: "{{ docker_image }}{% if docker_image %}:{% endif %}{{ docker_image_tag }}"
-    env:
-      TZ: "{{ docker_timezone }}"
+    docker_host: "{{ docker_host }}"
+    published_ports: "{{ docker_published_ports }}"
+    volumes: "{{ docker_volumes }}"
+    shm_size: "{{ docker_shm_size }}"
+    env: "{{ docker_env }}"
   tags:
     - docker-container
 
 - name: wait until service is ready {{ role_comment }}
   uri:
-    url: "http://{{ service_selenium_grid_host }}:{{ service_selenium_grid_http_port }}/grid/console"
+    url: "{{ service_selenium_grid_status_url }}"
     return_content: true
     timeout: 300
   register: service_console
-  until: service_console.content.find("Grid Console") != -1
+  until: service_selenium_grid_status_test in service_console.content
   delay: "{{ wait_delay | default(5) }}"
   retries: 360
   tags:
