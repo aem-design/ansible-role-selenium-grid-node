@@ -21,7 +21,7 @@
 
 - name: wait until service is ready {{ role_comment }}
   uri:
-    url: "{{ service_selenium_grid_status_url }}\
+    url: "{{ grid_status_url }}\
       http://{{ node_container.ansible_facts.docker_container.NetworkSettings.IPAddress }}\
       :{{ (node_container.ansible_facts.docker_container.Config.Env | select('match', 'NODE_PORT=.+') | list | first).split('=')[1] }}"
     return_content: true

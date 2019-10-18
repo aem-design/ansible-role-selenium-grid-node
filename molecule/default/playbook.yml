@@ -24,18 +24,18 @@
   roles:
     - {
       role: "{{ role_name }}",
-      service_selenium_grid_host: "{{ dockerhost_ip.stdout }}",
-      service_selenium_grid_port: "{{ test_grid_port }}",
-      service_selenium_grid_debug_vncport: "9901",
+      grid_host: "{{ dockerhost_ip.stdout }}",
+      grid_port: "{{ test_grid_port }}",
+      grid_debug_vncport: "9901",
       docker_container_name: "{{ test_node_name_firefox }}",
       docker_host: "{{ test_docker_host }}",
       debug_hide: false
     }
     - {
       role: "{{ role_name }}",
-      service_selenium_grid_host: "{{ dockerhost_ip.stdout }}",
-      service_selenium_grid_port: "{{ test_grid_port }}",
-      service_selenium_grid_debug_vncport: "9902",
+      grid_host: "{{ dockerhost_ip.stdout }}",
+      grid_port: "{{ test_grid_port }}",
+      grid_debug_vncport: "9902",
       docker_container_name: "{{ test_node_name_chrome }}",
       docker_host: "{{ test_docker_host }}",
       debug_hide: false
